@@ -56,7 +56,7 @@ $(function () {
         showNoSuggestionNotice: true,
         noSuggestionNotice: 'Sorry, no matching results',
     });
-    
+
     // Initialize autocomplete with custom appendTo:
     $('#autocomplete-custom-append').autocomplete({
         lookup: countriesArray,
@@ -67,4 +67,29 @@ $(function () {
     $('#autocomplete-dynamic').autocomplete({
         lookup: countriesArray
     });
+
+    var groupsArray = {
+      "suggestions": [
+        { "value": "Andorra", "data": "AE", "category": "Country" },
+        { "value": "Spain", "data": "SP", "category": "Country" },
+        { "value": "Greece", "data": "GK", "category": "Country" },
+        { "value": "Berlin", "data": "BR", "category": "City" },
+        { "value": "Granada", "data": "GR", "category": "City" },
+        { "value": "Luxemburgo", "data": "LX", "category": "City" }
+      ]
+    };
+
+    // Initialize autocomplete with local lookup:
+    $('#autocomplete-group').autocomplete({
+        lookup: groupsArray.suggestions,
+        onSelect: function (suggestion) {
+            $('#selection-group').html('You selected: ' + suggestion.value + ' <b>(' + suggestion.category + ')</b>' );
+        },
+        onHint: function (hint) {
+            $('#autocomplete-group-x').val(hint);
+        },
+        categories: true,
+    });
+
+
 });

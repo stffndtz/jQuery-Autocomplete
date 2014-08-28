@@ -52,6 +52,7 @@ The standard jquery.autocomplete.js file is around 2.7KB when minified via Closu
         * `orientation`: Default `bottom`. Vertical orientation of the displayed suggestions, available values are `auto`, `top`, `bottom`.
           If set to `auto`, the suggestions will be orientated it the way that place them closer to middle of the view port.
         * `onHide`: `function (container) {}` called before container will be hidden
+        * `categories`: Default `false`. Set to true to allow categories in the dropdown.
 
 Autocomplete instance has following methods:
 
@@ -120,6 +121,7 @@ Style sample:
     .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
     .autocomplete-selected { background: #F0F0F0; }
     .autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+    .autocomplete-group { background-color: rgb(231, 231, 231); border-top: 1px solid rgb(140, 155, 187); padding-left: 6px; font-size: 13px; }
 
 ##Response Format
 
@@ -142,6 +144,19 @@ supply just a string array for suggestions:
     {
         "query": "Unit",
         "suggestions": ["United Arab Emirates", "United Kingdom", "United States"]
+    }
+
+If categories are set to true, the format include category:
+
+    {
+        suggestions: [
+            { value: "United Arab Emirates",    data: "AE", category: "Country" },
+            { value: "United Kingdom",          data: "UK", category: "Country" },
+            { value: "United States",           data: "US", category: "Country" },
+            { value: "Berlin",                  data: "BE", category: "City" },
+            { value: "Granada",                 data: "GR", category: "City" },
+            { value: "Brooklyn",                data: "BR", category: "City" },
+        ]
     }
 
 ## Non standard query/results

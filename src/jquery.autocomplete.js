@@ -91,7 +91,8 @@
                 showNoSuggestionNotice: false,
                 noSuggestionNotice: 'No results',
                 orientation: 'bottom',
-                forceFixPosition: false
+                forceFixPosition: false,
+                categories: false
             };
 
         // Shared variables:
@@ -111,7 +112,8 @@
         that.options = $.extend({}, defaults, options);
         that.classes = {
             selected: 'autocomplete-selected',
-            suggestion: 'autocomplete-suggestion'
+            suggestion: 'autocomplete-suggestion',
+            group: 'autocomplete-group'
         };
         that.hint = null;
         that.hintValue = '';
@@ -600,7 +602,7 @@
 
               this.options.onHide.call(that.element, container);
             }
-            
+
             that.visible = false;
             that.selectedIndex = -1;
             $(that.suggestionsContainer).hide();
@@ -619,9 +621,11 @@
                 value = that.getQuery(that.currentValue),
                 className = that.classes.suggestion,
                 classSelected = that.classes.selected,
+                classGroup = that.classes.group,
                 container = $(that.suggestionsContainer),
                 noSuggestionsContainer = $(that.noSuggestionsContainer),
                 beforeRender = options.beforeRender,
+                categories = that.options.categories,
                 html = '',
                 index;
 
@@ -634,9 +638,24 @@
             }
 
             // Build suggestions inner HTML:
-            $.each(that.suggestions, function (i, suggestion) {
-                html += '<div class="' + className + '" data-index="' + i + '">' + formatResult(suggestion, value) + '</div>';
-            });
+            if ( categories )
+            {
+                var actual_category = "";
+                $.each(that.suggestions, function (i, suggestion) {
+                    if ( suggestion.category != actual_category )
+                    {
+                        html += '<div class="' + classGroup + '" ><b>' + suggestion.category + '</b></div>';
+                        actual_category = suggestion.category;
+                    };
+                    html += '<div class="' + className + '" data-index="' + i + '">' + formatResult(suggestion, value) + '</div>';
+                });
+            }
+            else
+            {
+                $.each(that.suggestions, function (i, suggestion) {
+                    html += '<div class="' + className + '" data-index="' + i + '">' + formatResult(suggestion, value) + '</div>';
+                });
+            }
 
             this.adjustContainerWidth();
 
@@ -646,7 +665,7 @@
             // Select first value by default:
             if (options.autoSelectFirst) {
                 that.selectedIndex = 0;
-                container.children().first().addClass(classSelected);
+                container.children( '.' + that.classes.suggestion ).first().addClass(classSelected);
             }
 
             if ($.isFunction(beforeRender)) {
@@ -777,9 +796,9 @@
             var that = this,
                 activeItem,
                 selected = that.classes.selected,
+                suggestion = that.classes.suggestion,
                 container = $(that.suggestionsContainer),
-                children = container.children();
-
+                children = container.children( '.' + suggestion );
             container.children('.' + selected).removeClass(selected);
 
             that.selectedIndex = index;
