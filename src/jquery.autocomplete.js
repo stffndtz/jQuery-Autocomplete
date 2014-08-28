@@ -626,6 +626,7 @@
                 noSuggestionsContainer = $(that.noSuggestionsContainer),
                 beforeRender = options.beforeRender,
                 categories = that.options.categories,
+                currCat = false,
                 html = '',
                 index;
 
@@ -641,14 +642,22 @@
             if ( categories )
             {
                 var actual_category = "";
+
                 $.each(that.suggestions, function (i, suggestion) {
                     if ( suggestion.category != actual_category )
                     {
-                        html += '<div class="' + classGroup + '" ><b>' + suggestion.category + '</b></div>';
+                        if(currCat){
+                            html += '</div>';
+                            currCat = false;
+                        }
+                        html += '<div class="' + classGroup + '" ><b>' + suggestion.category + '</b>';
                         actual_category = suggestion.category;
+                        currCat = true;
                     };
                     html += '<div class="' + className + '" data-index="' + i + '">' + formatResult(suggestion, value) + '</div>';
+
                 });
+                html += '</div>';
             }
             else
             {
